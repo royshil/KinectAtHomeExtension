@@ -5,11 +5,12 @@
 *                                                                              *
 *******************************************************************************/
 
+#include <iostream>
+#include <string>
 #include "kinect_common.h"
 
 // local header
 #include "PointDrawer.h"
-#include "CyclicBuffer.h"
 
 #if defined(__APPLE__)
 #  include <OpenGL/gl.h>
@@ -40,7 +41,7 @@
 //static EGLContext context = EGL_NO_CONTEXT;
 //#endif
 
-#include <iostream>
+
 
 // OpenNI objects
 xn::Context g_Context;

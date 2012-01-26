@@ -54,7 +54,7 @@ void glutDisplay (void);
 
 kinectathomeMac::kinectathomeMac() : m_layer(NULL) {}
 
-kinectathomeMac::~tutorialpluginMac()
+kinectathomeMac::~kinectathomeMac()
 {
     if (m_layer) {
         [(CALayer*)m_layer removeFromSuperlayer];

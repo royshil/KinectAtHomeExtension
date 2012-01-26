@@ -11,6 +11,8 @@
 
 #include "kinectathome.h"
 
+int kinect_main(int argc, char ** argv);
+
 ///////////////////////////////////////////////////////////////////////////////
 /// @fn kinectathome::StaticInitialize()
 ///

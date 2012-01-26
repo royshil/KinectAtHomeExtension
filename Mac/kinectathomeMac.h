@@ -12,7 +12,7 @@
 #include "PluginEvents/MacEventCocoa.h"
 #include "Mac/PluginWindowMac.h"
 
-#include "../tutorialplugin.h"
+#include "../kinectathome.h"
 
 class kinectathomeMac : public kinectathome {
 public:
@@ -22,7 +22,7 @@ public:
     BEGIN_PLUGIN_EVENT_MAP()
 	EVENTTYPE_CASE(FB::AttachedEvent, onWindowAttached, FB::PluginWindowMac)
 	EVENTTYPE_CASE(FB::DetachedEvent, onWindowDetached, FB::PluginWindowMac)
-	PLUGIN_EVENT_MAP_CASCADE(tutorialplugin)
+	PLUGIN_EVENT_MAP_CASCADE(kinectathome)
     END_PLUGIN_EVENT_MAP()
 	
     virtual bool onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindowMac*);
