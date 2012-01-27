@@ -55,6 +55,8 @@ target_link_libraries(${PROJECT_NAME}
     ${PLUGIN_INTERNAL_DEPS}
 	${OPENGL_FRAMEWORK}
 	${QUARTZ_CORE_FRAMEWORK}
+	${FFMPEG_LIBSWSCALE_LIBS}
+	${X264_LIBS}
 	/Users/royshilkrot/Downloads/OpenNI-Bin-MacOSX-v1.3.2.3/Lib/libOpenNI.dylib
 	/Users/royshilkrot/Downloads/NITE-Bin-MacOSX-v1.4.1.2/Bin/libXnVNite_1_4_1.dylib
 	/Users/royshilkrot/Downloads/NITE-Bin-MacOSX-v1.4.1.2/Bin/libXnVHandGenerator_1_4_1.dylib

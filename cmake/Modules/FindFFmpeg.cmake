@@ -1,112 +1,60 @@
-# Locate ffmpeg
-# This module defines
-# FFMPEG_LIBRARIES
-# FFMPEG_FOUND, if false, do not try to link to ffmpeg
-# FFMPEG_INCLUDE_DIR, where to find the headers
-#
-# $FFMPEG_DIR is an environment variable that would
-# correspond to the ./configure --prefix=$FFMPEG_DIR
-#
-# Created by Robert Osfield.
+find_package(PkgConfig)
 
 
-#In ffmpeg code, old version use "#include <header.h>" and newer use "#include <libname/header.h>"
-#In OSG ffmpeg plugin, we use "#include <header.h>" for compatibility with old version of ffmpeg
+macro(FFMPEG_FIND varname shortname headername)
 
-#We have to search the path which contain the header.h (usefull for old version)
-#and search the path which contain the libname/header.h (usefull for new version)
+	pkg_check_modules(PC_${varname} ${shortname})
 
-#Then we need to include ${FFMPEG_libname_INCLUDE_DIRS} (in old version case, use by ffmpeg header and osg plugin code)
-#                                                       (in new version case, use by ffmpeg header) 
-#and ${FFMPEG_libname_INCLUDE_DIRS/libname}             (in new version case, use by osg plugin code)
+	find_path(${varname}_INCLUDE_DIR "${shortname}/${headername}" 
+		HINTS ${PC_${varname}_INCLUDEDIR} ${PC_${varname}_INCLUDE_DIRS}
+		NO_DEFAULT_PATH
+		)
+	
+	if(${varname}_INCLUDE_DIR STREQUAL "${varname}_INCLUDE_DIR-NOTFOUND")
+		message(STATUS "look for newer strcture")
+		pkg_check_modules(PC_${varname} "lib${shortname}")
 
+		find_path(${varname}_INCLUDE_DIR "lib${shortname}/${headername}"
+			HINTS ${PC_${varname}_INCLUDEDIR} ${PC_${varname}_INCLUDE_DIRS}
+			NO_DEFAULT_PATH
+			)
+	endif()
 
-# Macro to find header and lib directories
-# example: FFMPEG_FIND(AVFORMAT avformat avformat.h)
-MACRO(FFMPEG_FIND varname shortname headername)
-	MESSAGE(STATUS "looking for ${shortname}...")
+	find_library(${varname}_LIBRARIES names ${shortname}
+		HINTS ${PC_${varname}_LIBDIR} ${PC_${varname}_LIBRARY_DIR})
 
-    # old version of ffmpeg put header in $prefix/include/[ffmpeg]
-    # so try to find header in include directory
-    FIND_PATH(FFMPEG_${varname}_INCLUDE_DIRS ${headername}
-        PATHS
-        ${FFMPEG_ROOT}/include
-        $ENV{FFMPEG_DIR}/include
-        $ENV{OSGDIR}/include
-        $ENV{OSG_ROOT}/include
-        ~/Library/Frameworks
-        /Library/Frameworks
-        /usr/local/include
-        /usr/include
-        /sw/include # Fink
-        /opt/local/include # DarwinPorts
-        /opt/csw/include # Blastwave
-        /opt/include
-        /usr/freeware/include
-        PATH_SUFFIXES ffmpeg
-        DOC "Location of FFMPEG Headers"
-    )
+	if(${varname}_LIBRARIES STREQUAL "${varname}_LIBRARIES-NOTFOUND")
+		message(STATUS "look for newer structure for library")
+		find_library(${varname}_LIBRARIES names lib${shortname}
+			HINTS ${PC_${varname}_LIBDIR} ${PC_${varname}_LIBRARY_DIR})
+	endif()
 
-    # newer version of ffmpeg put header in $prefix/include/[ffmpeg/]lib${shortname}
-    # so try to find lib${shortname}/header in include directory
-    IF(NOT FFMPEG_${varname}_INCLUDE_DIRS)
-        FIND_PATH(FFMPEG_${varname}_INCLUDE_DIRS lib${shortname}/${headername}
-            ${FFMPEG_ROOT}/include
-            $ENV{FFMPEG_DIR}/include
-            $ENV{OSGDIR}/include
-            $ENV{OSG_ROOT}/include
-            ~/Library/Frameworks
-            /Library/Frameworks
-            /usr/local/include
-            /usr/include/
-            /sw/include # Fink
-            /opt/local/include # DarwinPorts
-            /opt/csw/include # Blastwave
-            /opt/include
-            /usr/freeware/include
-            PATH_SUFFIXES ffmpeg
-            DOC "Location of FFMPEG Headers"
-        )
-    ENDIF(NOT FFMPEG_${varname}_INCLUDE_DIRS)
+	if(NOT ${varname}_INCLUDE_DIR STREQUAL "${varname}_INCLUDE_DIR-NOTFOUND"
+		AND NOT ${varname}_LIBRARIES STREQUAL ${varname}_LIBRARIES-NOTFOUND)
 
-    FIND_LIBRARY(FFMPEG_${varname}_LIBRARIES
-        NAMES ${shortname}
-        PATHS
-        ${FFMPEG_ROOT}/lib
-        $ENV{FFMPEG_DIR}/lib
-        $ENV{OSGDIR}/lib
-        $ENV{OSG_ROOT}/lib
-        ~/Library/Frameworks
-        /Library/Frameworks
-        /usr/local/lib
-        /usr/local/lib64
-        /usr/lib
-        /usr/lib64
-        /sw/lib
-        /opt/local/lib
-        /opt/csw/lib
-        /opt/lib
-        /usr/freeware/lib64
-        DOC "Location of FFMPEG Libraries"
-    )
+		message(STATUS "found ${shortname}: include ${${varname}_INCLUDE_DIR} lib ${${varname}_LIBRARIES}")
+		SET(FFMPEG_${varname}_FOUND 1)
+		SET(FFMPEG_${varname}_INCLUDE_DIRS ${${varname}_INCLUDE_DIR})
+		SET(FFMPEG_${varname}_LIBS ${${varname}_LIBRARIES})
+	else()
+		message(STATUS "Can't find ${shortname}")
+	endif()
 
-    IF (FFMPEG_${varname}_LIBRARIES AND FFMPEG_${varname}_INCLUDE_DIRS)
-        SET(FFMPEG_${varname}_FOUND 1)
-    ENDIF(FFMPEG_${varname}_LIBRARIES AND FFMPEG_${varname}_INCLUDE_DIRS)
-
-ENDMACRO(FFMPEG_FIND)
-
-SET(FFMPEG_ROOT "$ENV{FFMPEG_DIR}" CACHE PATH "Location of FFMPEG")
+endmacro(FFMPEG_FIND)
 
 FFMPEG_FIND(LIBAVFORMAT avformat avformat.h)
 FFMPEG_FIND(LIBAVDEVICE avdevice avdevice.h)
 FFMPEG_FIND(LIBAVCODEC  avcodec  avcodec.h)
 FFMPEG_FIND(LIBAVUTIL   avutil   avutil.h)
-FFMPEG_FIND(LIBSWSCALE  swscale  swscale.h)  # not sure about the header to look for here.
+FFMPEG_FIND(LIBSWSCALE  swscale  swscale.h)
 
 SET(FFMPEG_FOUND "NO")
-# Note we don't check FFMPEG_LIBSWSCALE_FOUND here, it's optional.
-IF   (FFMPEG_LIBAVFORMAT_FOUND AND FFMPEG_LIBAVDEVICE_FOUND AND FFMPEG_LIBAVCODEC_FOUND AND FFMPEG_LIBAVUTIL_FOUND)
+IF   (FFMPEG_LIBAVFORMAT_FOUND AND 
+	FFMPEG_LIBAVDEVICE_FOUND AND 
+	FFMPEG_LIBAVCODEC_FOUND AND 
+	FFMPEG_LIBAVUTIL_FOUND AND
+	FFMPEG_LIBSWSCALE_FOUND
+	)
 
     SET(FFMPEG_FOUND "YES")
 
@@ -114,15 +62,16 @@ IF   (FFMPEG_LIBAVFORMAT_FOUND AND FFMPEG_LIBAVDEVICE_FOUND AND FFMPEG_LIBAVCODE
 
     SET(FFMPEG_LIBRARY_DIRS ${FFMPEG_LIBAVFORMAT_LIBRARY_DIRS})
 
-    # Note we don't add FFMPEG_LIBSWSCALE_LIBRARIES here, it will be added if found later.
     SET(FFMPEG_LIBRARIES
         ${FFMPEG_LIBAVFORMAT_LIBRARIES}
         ${FFMPEG_LIBAVDEVICE_LIBRARIES}
         ${FFMPEG_LIBAVCODEC_LIBRARIES}
-        ${FFMPEG_LIBAVUTIL_LIBRARIES})
+        ${FFMPEG_LIBAVUTIL_LIBRARIES}
+	${FFMPEG_LIBSWSCALE_LIBRARIES}
+	)
 
-ELSE (FFMPEG_LIBAVFORMAT_FOUND AND FFMPEG_LIBAVDEVICE_FOUND AND FFMPEG_LIBAVCODEC_FOUND AND FFMPEG_LIBAVUTIL_FOUND)
+ELSE ()
 
    MESSAGE(STATUS "Could not find FFMPEG")
 
-ENDIF(FFMPEG_LIBAVFORMAT_FOUND AND FFMPEG_LIBAVDEVICE_FOUND AND FFMPEG_LIBAVCODEC_FOUND AND FFMPEG_LIBAVUTIL_FOUND)
+ENDIF()

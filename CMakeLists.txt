@@ -14,6 +14,7 @@ file (GLOB GENERAL RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     [^.]*.cpp
     [^.]*.h
     [^.]*.cmake
+	cmake/Modules/*.cmake
     )
 
 include_directories(${PLUGIN_INCLUDE_DIRS})
@@ -34,7 +35,23 @@ SET( SOURCES
     ${GENERATED}
     )
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/")
+
 find_library(OPENGL OpenGL)
+
+find_package(FFmpeg)
+if(${FFMPEG_LIBSWSCALE_FOUND})
+	message(STATUS "found swscale at ${FFMPEG_LIBSWSCALE_INCLUDE_DIRS} and ${FFMPEG_LIBAVUTIL_INCLUDE_DIRS}")
+	include_directories(${FFMPEG_LIBSWSCALE_INCLUDE_DIRS})
+	include_directories(${FFMPEG_LIBAVUTIL_INCLUDE_DIRS})
+else(${FFMPEG_LIBSWSCALE_FOUND})
+	message(STATUS "can't find SWSCALE!!")
+endif(${FFMPEG_LIBSWSCALE_FOUND})
+
+find_package(x264)
+if(${X264_FOUND})
+	include_directories(${X264_INCLUDE_DIRS})
+endif()
 
 # This will include Win/projectDef.cmake, X11/projectDef.cmake, Mac/projectDef 
 # depending on the platform
