@@ -50,6 +50,10 @@ add_windows_plugin(${PROJECT_NAME} SOURCES)
 # add library dependencies here; leave ${PLUGIN_INTERNAL_DEPS} there unless you know what you're doing!
 target_link_libraries(${PROJECT_NAME}
     ${PLUGIN_INTERNAL_DEPS}
+	${FFMPEG_LIBSWSCALE_LIBS}
+	${FFMPEG_LIBAVUTIL_LIBS}
+	${X264_LIBS}
+	${OPENGL_LIBS} ${OPENGL_LIBRARY} ${OPENGL_LIBRARIES} OPENGL32.LIB #OMG I HATE COMPILING FOR WIN32
 	"D:\\Program Files\\NITE\\Lib\\XnVNITE_1_5_2.lib"
 	"D:\\Program Files\\NITE\\Lib\\XnVHandGenerator_1_5_2.lib"
 	"D:\\Program Files\\OpenNI\\Lib\\openNI.lib"

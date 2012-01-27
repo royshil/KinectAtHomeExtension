@@ -7,6 +7,8 @@
  *
  */
 
+#define UINT64_C(val) val##ui64
+
 #include <libswscale/swscale.h>
 #include <XnCppWrapper.h>
 #include <x264.h>

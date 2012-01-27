@@ -37,7 +37,7 @@ SET( SOURCES
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/")
 
-find_library(OPENGL OpenGL)
+find_library(OpenGL REQUIRED)
 
 find_package(FFmpeg)
 if(${FFMPEG_LIBSWSCALE_FOUND})
