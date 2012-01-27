@@ -17,7 +17,7 @@
 #elif defined(__linux__)
 #  include <GL/gl.h>
 #else
-#  include <gl.h>
+#  include <gl\gl.h>
 #endif
 
 #undef USE_GLUT

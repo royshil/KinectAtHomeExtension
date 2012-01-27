@@ -3,44 +3,83 @@ find_package(PkgConfig)
 
 macro(FFMPEG_FIND varname shortname headername)
 
-	pkg_check_modules(PC_${varname} ${shortname})
+	IF(NOT WIN32)
+		pkg_check_modules(PC_${varname} ${shortname})
 
-	find_path(${varname}_INCLUDE_DIR "${shortname}/${headername}" 
-		HINTS ${PC_${varname}_INCLUDEDIR} ${PC_${varname}_INCLUDE_DIRS}
-		NO_DEFAULT_PATH
-		)
-	
-	if(${varname}_INCLUDE_DIR STREQUAL "${varname}_INCLUDE_DIR-NOTFOUND")
-		message(STATUS "look for newer strcture")
-		pkg_check_modules(PC_${varname} "lib${shortname}")
-
-		find_path(${varname}_INCLUDE_DIR "lib${shortname}/${headername}"
+		find_path(${varname}_INCLUDE_DIR "${shortname}/${headername}" 
 			HINTS ${PC_${varname}_INCLUDEDIR} ${PC_${varname}_INCLUDE_DIRS}
 			NO_DEFAULT_PATH
 			)
-	endif()
+	ELSE()
+		FIND_PATH(${varname}_INCLUDE_DIR "${shortname}/${headername}")
+	ENDIF()
+		
+	if(${varname}_INCLUDE_DIR STREQUAL "${varname}_INCLUDE_DIR-NOTFOUND")
+		message(STATUS "look for newer strcture")
+		IF(NOT WIN32)
+			PKG_CHECK_MODULES(PC_${varname} "lib${shortname}")
 
-	find_library(${varname}_LIBRARIES names ${shortname}
-		HINTS ${PC_${varname}_LIBDIR} ${PC_${varname}_LIBRARY_DIR})
+			FIND_PATH(${varname}_INCLUDE_DIR "lib${shortname}/${headername}"
+				HINTS ${PC_${varname}_INCLUDEDIR} ${PC_${varname}_INCLUDE_DIRS}
+				NO_DEFAULT_PATH
+				)
+		ELSE()
+			FIND_PATH(${varname}_INCLUDE_DIR "lib${shortname}/${headername}")
+		ENDIF()
+	ENDIF()
 
-	if(${varname}_LIBRARIES STREQUAL "${varname}_LIBRARIES-NOTFOUND")
-		message(STATUS "look for newer structure for library")
-		find_library(${varname}_LIBRARIES names lib${shortname}
-			HINTS ${PC_${varname}_LIBDIR} ${PC_${varname}_LIBRARY_DIR})
-	endif()
 
-	if(NOT ${varname}_INCLUDE_DIR STREQUAL "${varname}_INCLUDE_DIR-NOTFOUND"
-		AND NOT ${varname}_LIBRARIES STREQUAL ${varname}_LIBRARIES-NOTFOUND)
+	if(${varname}_INCLUDE_DIR STREQUAL "${varname}_INCLUDE_DIR-NOTFOUND")
+		MESSAGE(STATUS "Can't find includes for ${shortname}...")
+	ELSE()
+		MESSAGE(STATUS "Found ${shortname} include dirs: ${${varname}_INCLUDE_DIR}")
 
-		message(STATUS "found ${shortname}: include ${${varname}_INCLUDE_DIR} lib ${${varname}_LIBRARIES}")
-		SET(FFMPEG_${varname}_FOUND 1)
-		SET(FFMPEG_${varname}_INCLUDE_DIRS ${${varname}_INCLUDE_DIR})
-		SET(FFMPEG_${varname}_LIBS ${${varname}_LIBRARIES})
-	else()
-		message(STATUS "Can't find ${shortname}")
-	endif()
+#		GET_DIRECTORY_PROPERTY(FFMPEG_PARENT DIRECTORY ${${varname}_INCLUDE_DIR} PARENT_DIRECTORY)
+		GET_FILENAME_COMPONENT(FFMPEG_PARENT ${${varname}_INCLUDE_DIR} PATH)
+		MESSAGE(STATUS "Using FFMpeg dir parent as hint: ${FFMPEG_PARENT}")
 
-endmacro(FFMPEG_FIND)
+		IF(NOT WIN32)
+			FIND_LIBRARY(${varname}_LIBRARIES NAMES ${shortname}
+				HINTS ${PC_${varname}_LIBDIR} ${PC_${varname}_LIBRARY_DIR} ${FFMPEG_PARENT})
+		ELSE()
+#			FIND_PATH(${varname}_LIBRARIES "${shortname}.lib" HINTS ${FFMPEG_PARENT})
+			FILE(GLOB_RECURSE ${varname}_LIBRARIES "${FFMPEG_PARENT}/${shortname}.lib") 
+			# GLOBing is very bad... but windows sux, this is the only thing that works
+		ENDIF()
+
+		IF(${varname}_LIBRARIES STREQUAL "${varname}_LIBRARIES-NOTFOUND")
+			MESSAGE(STATUS "look for newer structure for library")
+			IF(NOT WIN32)
+				FIND_LIBRARY(${varname}_LIBRARIES NAMES lib${shortname}
+					HINTS ${PC_${varname}_LIBDIR} ${PC_${varname}_LIBRARY_DIR} ${FFMPEG_PARENT})
+			ELSE()
+#				FIND_PATH(${varname}_LIBRARIES "lib${shortname}.lib" HINTS ${FFMPEG_PARENT})
+				FILE(GLOB_RECURSE ${varname}_LIBRARIES "${FFMPEG_PARENT}/lib${shortname}.lib") 
+			ENDIF()
+		ENDIF()
+
+
+		IF(${varname}_LIBRARIES STREQUAL "${varname}_LIBRARIES-NOTFOUND")
+			MESSAGE(STATUS "Can't find lib for ${shortname}...")
+		ELSE()
+			MESSAGE(STATUS "Found ${shorname} libs: ${${varname}_LIBRARIES}")
+		ENDIF()
+
+
+		IF(NOT ${varname}_INCLUDE_DIR STREQUAL "${varname}_INCLUDE_DIR-NOTFOUND"
+			AND NOT ${varname}_LIBRARIES STREQUAL ${varname}_LIBRARIES-NOTFOUND)
+
+			MESSAGE(STATUS "found ${shortname}: include ${${varname}_INCLUDE_DIR} lib ${${varname}_LIBRARIES}")
+			SET(FFMPEG_${varname}_FOUND 1)
+			SET(FFMPEG_${varname}_INCLUDE_DIRS ${${varname}_INCLUDE_DIR})
+			SET(FFMPEG_${varname}_LIBS ${${varname}_LIBRARIES})
+		ELSE()
+			MESSAGE(STATUS "Can't find ${shortname}")
+		ENDIF()
+
+	ENDIF()
+
+ENDMACRO(FFMPEG_FIND)
 
 FFMPEG_FIND(LIBAVFORMAT avformat avformat.h)
 FFMPEG_FIND(LIBAVDEVICE avdevice avdevice.h)

@@ -18,6 +18,9 @@ add_definitions(
     /D "_ATL_STATIC_REGISTRY"
 )
 
+include_directories("D:\\Program Files\\OpenNI\\Include")
+include_directories("D:\\Program Files\\NITE\\Include")
+
 SOURCE_GROUP(Win FILES ${PLATFORM})
 
 set (SOURCES
@@ -47,6 +50,9 @@ add_windows_plugin(${PROJECT_NAME} SOURCES)
 # add library dependencies here; leave ${PLUGIN_INTERNAL_DEPS} there unless you know what you're doing!
 target_link_libraries(${PROJECT_NAME}
     ${PLUGIN_INTERNAL_DEPS}
+	"D:\\Program Files\\NITE\\Lib\\XnVNITE_1_5_2.lib"
+	"D:\\Program Files\\NITE\\Lib\\XnVHandGenerator_1_5_2.lib"
+	"D:\\Program Files\\OpenNI\\Lib\\openNI.lib"
     )
 
 set(WIX_HEAT_FLAGS

@@ -24,7 +24,7 @@
 #elif defined(__linux__)
 #  include <GL/gl.h>
 #else
-#  include <gl.h>
+#  include <gl\gl.h>
 #endif
 
 // Constructor. Receives the number of previous positions to store per hand,
