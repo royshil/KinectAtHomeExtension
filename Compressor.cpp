@@ -23,7 +23,7 @@ m_imageGenerator(imageGenerator)
 	
 	//init pix format converter 
 	//TODO: release in d'tor
-	convertCtx = sws_getContext(width, height, PIX_FMT_RGB24, width, height, PIX_FMT_YUV420P, SWS_FAST_BILINEAR, NULL, NULL, NULL);
+	convertCtx = sws_getCachedContext(convertCtx, width, height, PIX_FMT_RGB24, width, height, PIX_FMT_YUV420P, SWS_FAST_BILINEAR, NULL, NULL, NULL);
 	
 	//TODO: init x264 compressor
 	x264_param_t param;

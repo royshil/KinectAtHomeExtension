@@ -56,6 +56,7 @@ target_link_libraries(${PROJECT_NAME}
 	${OPENGL_FRAMEWORK}
 	${QUARTZ_CORE_FRAMEWORK}
 	${FFMPEG_LIBSWSCALE_LIBS}
+	${FFMPEG_LIBAVUTIL_LIBS}
 	${X264_LIBS}
 	/Users/royshilkrot/Downloads/OpenNI-Bin-MacOSX-v1.3.2.3/Lib/libOpenNI.dylib
 	/Users/royshilkrot/Downloads/NITE-Bin-MacOSX-v1.4.1.2/Bin/libXnVNite_1_4_1.dylib

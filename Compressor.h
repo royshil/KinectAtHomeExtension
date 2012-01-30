@@ -9,9 +9,14 @@
 
 #define UINT64_C(val) val##ui64
 
+#ifdef __cplusplus 
+extern "C" { 
 #include <libswscale/swscale.h>
-#include <XnCppWrapper.h>
 #include <x264.h>
+} 
+#endif 
+
+#include <XnCppWrapper.h>
 
 class Compressor {
 public:
