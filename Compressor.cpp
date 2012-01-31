@@ -51,16 +51,16 @@ m_imageGenerator(imageGenerator)
 
 void Compressor::Update(const xn::DepthGenerator& depthGenerator, 
 						const xn::ImageGenerator& imageGenerator) {
-	//TODO: get RGB image buffer from generator
+	//get RGB image buffer from generator
 	xn::ImageMetaData imd;
 	imageGenerator.GetMetaData(imd);
 	const XnUInt8* data = imd.Data();
 	
-	//TODO: convert pix-fmt 
+	//convert pix-fmt 
 	int srcstride = width*3; //RGB stride is just 3*width
 	sws_scale(convertCtx, &data, &srcstride, 0, height, pic_in.img.plane, pic_in.img.i_stride);
 	
-	//TODO: send to x264 compression
+	//send to x264 compression
 	x264_nal_t* nals;
 	int i_nals;
 	int frame_size = x264_encoder_encode(encoder, &nals, &i_nals, &pic_in, &pic_out);

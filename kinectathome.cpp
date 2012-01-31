@@ -11,6 +11,8 @@
 
 #include "kinectathome.h"
 
+#include "Logging.h"
+
 int kinect_main(int argc, char ** argv);
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -72,6 +74,7 @@ void kinectathome::onPluginReady()
 	
 	boost::shared_ptr<kinectathomeAPI> _jsapi = FB::ptr_cast<kinectathomeAPI>(createJSAPI());
 	_jsapi->Log("kinectathome::onPluginReady");
+	init_logging(_jsapi);
 }
 
 void kinectathome::shutdown()
