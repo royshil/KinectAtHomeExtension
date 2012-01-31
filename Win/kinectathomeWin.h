@@ -41,6 +41,8 @@ private:
 	void EnableOpenGL(HWND handleWnd, HDC * hdc, HGLRC * hRC);
 	void DisableOpenGL(HWND hWnd, HDC hDC, HGLRC hRC);
 public:
+	VOID drawThreaded();
+
 	virtual bool onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow *);
     virtual bool onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *);
 
