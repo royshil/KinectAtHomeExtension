@@ -43,6 +43,13 @@ private:
 public:
 	VOID drawThreaded();
 
+	BEGIN_PLUGIN_EVENT_MAP()
+	EVENTTYPE_CASE(FB::AttachedEvent, onWindowAttached, FB::PluginWindowWin)
+	EVENTTYPE_CASE(FB::DetachedEvent, onWindowDetached, FB::PluginWindowWin)
+	PLUGIN_EVENT_MAP_CASCADE(kinectathome)
+    END_PLUGIN_EVENT_MAP()
+
+
 	virtual bool onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow *);
     virtual bool onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *);
 
