@@ -122,6 +122,7 @@ bool kinectathome::onMouseMove(FB::MouseMoveEvent *evt, FB::PluginWindow *)
 }
 bool kinectathome::onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow *)
 {
+	send_log("kinectathome::onWindowAttached");
     // The window is attached; act appropriately
     return false;
 }

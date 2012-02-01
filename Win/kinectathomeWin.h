@@ -4,6 +4,7 @@
 #ifdef FB_WIN
 #include "PluginWindowWin.h"
 #include "PluginWindowlessWin.h"
+#include "PluginEvents/WindowsEvent.h"
 #ifdef HAS_LEAKFINDER
 #define XML_LEAK_FINDER
 #include "LeakFinder/LeakFinder.h"
@@ -53,7 +54,7 @@ public:
 	kinectathomeWin();
 	~kinectathomeWin();
 
-	virtual bool onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow *);
-    virtual bool onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *);
+	virtual bool onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindowWin *);
+    virtual bool onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindowWin *);
 
 };

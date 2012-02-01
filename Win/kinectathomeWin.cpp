@@ -118,7 +118,7 @@ void kinectathomeWin::DisableOpenGL(HWND hWnd, HDC hDC, HGLRC hRC)
 	ReleaseDC( hWnd, hDC );
 }
 
-bool kinectathomeWin::onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow* window)
+bool kinectathomeWin::onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindowWin* window)
 {
 	send_log("kinectathomeWin::onWindowAttached");
 	pluginWindow = window;
@@ -129,7 +129,7 @@ bool kinectathomeWin::onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow*
     return kinectathome::onWindowAttached(evt,window);
 }
 
-bool kinectathomeWin::onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow * window)
+bool kinectathomeWin::onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindowWin* window)
 {
 	send_log("kinectathomeWin::onWindowDetached");
     // The window is about to be detached; act appropriately
