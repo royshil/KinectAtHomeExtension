@@ -35,6 +35,7 @@ FB::PluginWindowWin* pluginWindowWin;
 FB::PluginWindow* pluginWindow;
 
 #include "../kinectathome.h"
+#include "../Logging.h"
 
 class kinectathomeWin : public kinectathome {
 private:
@@ -49,6 +50,8 @@ public:
 	PLUGIN_EVENT_MAP_CASCADE(kinectathome)
     END_PLUGIN_EVENT_MAP()
 
+	kinectathomeWin();
+	~kinectathomeWin();
 
 	virtual bool onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow *);
     virtual bool onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow *);

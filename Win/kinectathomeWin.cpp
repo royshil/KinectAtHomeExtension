@@ -2,9 +2,13 @@
 
 void glutDisplay (void);
 
+kinectathomeWin::kinectathomeWin() { } //c'tor
+kinectathomeWin::~kinectathomeWin() { } //d'tor
+
 // OpenGL thread
 void kinectathomeWin::drawThreaded()
 {
+	send_log("kinectathomeWin::drawThreaded");
 	EnableOpenGL( pluginWindowWin->getHWND(), &hDC, &hRC );
 	SetFocus(pluginWindowWin->getHWND());	
 	//FB::
@@ -116,6 +120,7 @@ void kinectathomeWin::DisableOpenGL(HWND hWnd, HDC hDC, HGLRC hRC)
 
 bool kinectathomeWin::onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow* window)
 {
+	send_log("kinectathomeWin::onWindowAttached");
 	pluginWindow = window;
 	FB::PluginWindowlessWin *wndLess = dynamic_cast<FB::PluginWindowlessWin*>(window);
     pluginWindowWin = dynamic_cast<FB::PluginWindowWin*>(window);
@@ -126,6 +131,7 @@ bool kinectathomeWin::onWindowAttached(FB::AttachedEvent *evt, FB::PluginWindow*
 
 bool kinectathomeWin::onWindowDetached(FB::DetachedEvent *evt, FB::PluginWindow * window)
 {
+	send_log("kinectathomeWin::onWindowDetached");
     // The window is about to be detached; act appropriately
 
     return kinectathome::onWindowDetached(evt,window);
