@@ -27,7 +27,7 @@ void kinectathome::StaticInitialize()
     // Place one-time initialization stuff here; As of FireBreath 1.4 this should only
     // be called once per process
 	
-	kinect_main(0, 0); //initialize Kinect stuff...
+	
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -75,6 +75,7 @@ void kinectathome::onPluginReady()
 	boost::shared_ptr<kinectathomeAPI> _jsapi = FB::ptr_cast<kinectathomeAPI>(createJSAPI());
 	_jsapi->Log("kinectathome::onPluginReady");
 	init_logging(_jsapi);
+	kinect_main(0, 0); //initialize Kinect stuff...
 }
 
 void kinectathome::shutdown()
