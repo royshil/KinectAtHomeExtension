@@ -15,13 +15,16 @@ pkg_check_modules(OpenNI_PKGCONF OpenNI)
 
 # Include dir
 find_path(OpenNI_INCLUDE_DIR
-  NAMES ni/XnOpenNI.h
+  NAMES XnOpenNI.h
   HINTS ${OpenNI_PKGCONF_INCLUDE_DIRS}
+  PATH_SUFFIXES "ni"
 )
 
 if(OpenNI_INCLUDE_DIR STREQUAL "OpenNI_INCLUDE_DIR-NOTFOUND")
 	message(STATUS "Looking for OpenNI in default dirs")
-	find_path(OpenNI_INCLUDE_DIR NAMES ni/XnOpenNI.h )
+	find_path(OpenNI_INCLUDE_DIR NAMES XnOpenNI.h 
+	  PATH_SUFFIXES "ni"
+	)
 endif()
 
 # Finally the library itself

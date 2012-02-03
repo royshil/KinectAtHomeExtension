@@ -14,9 +14,6 @@
 #include <XnHash.h>
 #include <XnLog.h>
 
-// Header for NITE
-#include "XnVNite.h"
-
 #include "Logging.h"
 
 #define CHECK_RC(rc, what)											\
