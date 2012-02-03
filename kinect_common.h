@@ -17,10 +17,13 @@
 // Header for NITE
 #include "XnVNite.h"
 
+#include "Logging.h"
+
 #define CHECK_RC(rc, what)											\
 	if (rc != XN_STATUS_OK)											\
 	{																\
 		printf("%s failed: %s\n", what, xnGetStatusString(rc));		\
+		send_log(std::string(what) + " failed " + std::string(xnGetStatusString(rc))); \
 		return rc;													\
 	}
 
@@ -30,6 +33,7 @@
 		XnChar strError[1024];				\
 		errors.ToString(strError, 1024);	\
 		printf("%s\n", strError);			\
+		send_log(strError);					\
 		return (rc);						\
 	}
 
