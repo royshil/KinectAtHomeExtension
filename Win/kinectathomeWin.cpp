@@ -18,6 +18,7 @@ void kinectathomeWin::drawThreaded()
 	wait = 1 / fps;
 
 	//return 0;
+	run = true;
 
 	while(run)
 	{

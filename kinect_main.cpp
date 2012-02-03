@@ -72,6 +72,9 @@ XnBool g_bQuit = false;
 XnBool g_bRecord = false;
 void kinect_setRecord(bool is_record) { g_bRecord = is_record; }
 
+bool kinect_initialized = false;
+
+
 //CyclicBuffer* cyclicBuffer = NULL;
 
 SessionState g_SessionState = NOT_IN_SESSION;
@@ -129,7 +132,8 @@ void DrawDepthMap(const xn::DepthMetaData& dm);
 // this function is called each frame
 void glutDisplay (void)
 {
-	
+	if(!kinect_initialized) return;
+
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
 	
@@ -283,7 +287,6 @@ void kinect_stop() {
 //	delete g_pSessionManager;
 }
 
-bool kinect_initialized = false;
 int kinect_main(int argc, char ** argv)
 {
 	XnStatus rc = XN_STATUS_OK;
@@ -291,7 +294,7 @@ int kinect_main(int argc, char ** argv)
 	
 	if(kinect_initialized) { 
 		g_Context.StartGeneratingAll();
-		return false;
+		return XN_STATUS_OK;
 	}
 
 	// Initialize OpenNI
@@ -379,4 +382,6 @@ int kinect_main(int argc, char ** argv)
 
 	CleanupExit();
 #endif
+
+	return rc;
 }

@@ -8,7 +8,7 @@
 \**********************************************************/
 
 #include "FactoryBase.h"
-#include "kinectathome.h"
+#include "kinectathomeWin.h"
 #include <boost/make_shared.hpp>
 
 class PluginFactory : public FB::FactoryBase
@@ -22,7 +22,7 @@ public:
     ///////////////////////////////////////////////////////////////////////////////
     FB::PluginCorePtr createPlugin(const std::string& mimetype)
     {
-        return boost::make_shared<kinectathome>();
+        return boost::make_shared<kinectathomeWin>();
     }
     
     ///////////////////////////////////////////////////////////////////////////////
