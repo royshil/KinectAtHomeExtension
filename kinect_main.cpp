@@ -1,9 +1,3 @@
-/*******************************************************************************
-*                                                                              *
-*   PrimeSense NITE 1.3 - Point Viewer Sample                                  *
-*   Copyright (C) 2010 PrimeSense Ltd.                                         *
-*                                                                              *
-*******************************************************************************/
 
 #include <iostream>
 #include <string>
@@ -29,18 +23,11 @@ xn::ImageGenerator g_ImageGenerator;
 #define GL_WIN_SIZE_X 720
 #define GL_WIN_SIZE_Y 480
 
-// Draw the depth map?
-XnBool g_bDrawDepthMap = true;
-XnBool g_bPrintFrameID = false;
-// Use smoothing?
-XnFloat g_fSmoothing = 0.0f;
 XnBool g_bPause = false;
-XnBool g_bQuit = false;
-
 XnBool g_bRecord = false;
-void kinect_setRecord(bool is_record) { g_bRecord = is_record; }
-
 bool kinect_initialized = false;
+
+void kinect_setRecord(bool is_record) { g_bRecord = is_record; }
 
 // this function is called each frame
 void glutDisplay (void)
